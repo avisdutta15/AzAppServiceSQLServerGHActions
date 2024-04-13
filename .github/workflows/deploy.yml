@@ -1,0 +1,29 @@
+name: Build and Publish .NET Application to App Service
+
+on:
+    push:
+    workflow_dispatch:
+
+permissions:
+    id-token: write # This is required for requesting the JWT
+    contents: read  # This is required for actions/checkout       
+
+env:
+    DOTNET_VERSION: 8.x
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repo
+    - uses: actions/checkout@v4
+    
+    # Setup .NET Sdk
+    - name: Setup .NET 
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{env.DOTNET_VERSION}}
+
+    # Check Directory Structure
+    - run: ls -R
