@@ -27,3 +27,27 @@ jobs:
 
     # Check Directory Structure
     - run: ls -R
+
+    # Restore dependencies
+    - name: Install dependencies
+      run: dotnet restore ./App.Api/App.Api.csproj
+
+    # Run dotnet build
+    - name: Build with dotnet
+      run: dotnet build ./App.Api/App.Api.csproj --configuration Release --no-restore
+
+    # Run dotnet publish and store the artifacts in catalog/publish
+    - name: Publish
+      run: |
+        dotnet publish ./App.Api/App.Api.csproj --configuration Release --no-build --output 'app/publish'
+
+    # Check Directory Structure
+    - run: ls -R
+
+    # Upload Artifacts
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v4
+      with:
+        name: demo-app
+        path: 'app/publish'          # The directory from where the artifact has to be uploaded.
+                                     # Since we published the output to app/publish, the package resides there.
